@@ -93,9 +93,9 @@ const FOCUS_WEIGHTS = {
 };
 
 const STARTER_PERSONALITIES = {
-  basic: {
-    name: "Basic",
-    description: "Spreadsheet weights and active items",
+  recommended: {
+    name: "Recommended",
+    description: "Default Setup",
     group: "Built In",
     mode: "source"
   },
@@ -155,7 +155,7 @@ const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD
 
 let customPersonalities = loadCustomPersonalities();
 let allPersonalities = buildPersonalities();
-let currentPresetId = "basic";
+let currentPresetId = "recommended";
 let draft = createDraftFromPreset(allPersonalities.get(currentPresetId), null);
 let currentStatement = [];
 let lastSummary = null;
@@ -165,16 +165,10 @@ const els = {
   personalitySelect: document.querySelector("#personalitySelect"),
   personalityGrid: document.querySelector("#personalityGrid"),
   currentPersonalityLabel: document.querySelector("#currentPersonalityLabel"),
-  draftStatus: document.querySelector("#draftStatus"),
   startingBalanceInput: document.querySelector("#startingBalanceInput"),
   transactionCountInput: document.querySelector("#transactionCountInput"),
   weeklyAllowanceInput: document.querySelector("#weeklyAllowanceInput"),
   genderSegment: document.querySelector("#genderSegment"),
-  savePersonalityButton: document.querySelector("#savePersonalityButton"),
-  updatePersonalityButton: document.querySelector("#updatePersonalityButton"),
-  resetPresetButton: document.querySelector("#resetPresetButton"),
-  activeItemsButton: document.querySelector("#activeItemsButton"),
-  clearItemsButton: document.querySelector("#clearItemsButton"),
   itemSettingsToggle: document.querySelector("#itemSettingsToggle"),
   itemSettingsContent: document.querySelector("#itemSettingsContent"),
   generateButton: document.querySelector("#generateButton"),
@@ -182,12 +176,10 @@ const els = {
   downloadCsvButton: document.querySelector("#downloadCsvButton"),
   searchInput: document.querySelector("#searchInput"),
   typeFilter: document.querySelector("#typeFilter"),
-  draftMetrics: document.querySelector("#draftMetrics"),
   summaryGrid: document.querySelector("#summaryGrid"),
   statementBody: document.querySelector("#statementBody"),
   itemsBody: document.querySelector("#itemsBody"),
   balanceChart: document.querySelector("#balanceChart"),
-  debtStatus: document.querySelector("#debtStatus"),
   welcomeState: document.querySelector("#welcomeState"),
   statementToolbar: document.querySelector("#statementToolbar"),
   statementContent: document.querySelector("#statementContent")
@@ -211,10 +203,6 @@ function bindEvents() {
     const button = event.target.closest("button[data-preset-id]");
     if (!button) return;
     loadPreset(button.dataset.presetId);
-  });
-
-  els.resetPresetButton.addEventListener("click", () => {
-    loadPreset(currentPresetId);
   });
 
   els.genderSegment.addEventListener("click", (event) => {
@@ -245,23 +233,6 @@ function bindEvents() {
 
   els.generateButton.addEventListener("click", generateAndRender);
   els.itemSettingsToggle.addEventListener("click", toggleItemSettings);
-  els.savePersonalityButton.addEventListener("click", saveDraftAsPersonality);
-  els.updatePersonalityButton.addEventListener("click", updateCurrentCustomPersonality);
-  els.activeItemsButton.addEventListener("click", () => {
-    SOURCE_TRANSACTIONS.forEach((item) => {
-      draft.items[item.id].included = item.active;
-      draft.items[item.id].weight = item.weight;
-    });
-    markDirty();
-    renderDraft();
-  });
-  els.clearItemsButton.addEventListener("click", () => {
-    SOURCE_TRANSACTIONS.forEach((item) => {
-      draft.items[item.id].included = false;
-    });
-    markDirty();
-    renderDraft();
-  });
 
   els.searchInput.addEventListener("input", renderItems);
   els.typeFilter.addEventListener("change", renderItems);
@@ -376,7 +347,7 @@ function createDraftFromPreset(preset, previousDraft) {
 }
 
 function loadPreset(presetId) {
-  const preset = allPersonalities.get(presetId) || allPersonalities.get("basic");
+  const preset = allPersonalities.get(presetId) || allPersonalities.get("recommended");
   currentPresetId = preset.id;
   draft = createDraftFromPreset(preset, draft);
   renderPersonalityControls();
@@ -434,28 +405,11 @@ function renderGenderButtons() {
 }
 
 function renderDraftStatus() {
-  els.draftStatus.textContent = draft.dirty ? "Edited" : "Clean";
-  els.draftStatus.classList.toggle("dirty", draft.dirty);
-  els.updatePersonalityButton.disabled = !(allPersonalities.get(currentPresetId)?.custom);
   els.currentPersonalityLabel.textContent = draft.name;
 }
 
 function renderDraftMetrics() {
-  const included = SOURCE_TRANSACTIONS.filter((item) => draft.items[item.id].included);
-  const eligible = included.filter((item) => genderFits(draft.gender, item.gender));
-  const weightTotal = eligible.reduce((sum, item) => sum + normalizedWeight(item.id), 0);
-  const incomeItems = eligible.filter((item) => item.amount > 0).length;
-  const expenseItems = eligible.filter((item) => item.amount < 0).length;
-  const allowanceItems = draft.weeklyAllowance > 0 ? 1 : 0;
-
-  els.draftMetrics.innerHTML = [
-    metricMarkup("Included", included.length.toString()),
-    metricMarkup("Available", (eligible.length + allowanceItems).toString()),
-    metricMarkup("Income Items", (incomeItems + allowanceItems).toString()),
-    metricMarkup("Weight Total", formatNumber(weightTotal)),
-    metricMarkup("Expense Items", expenseItems.toString()),
-    metricMarkup("Starting", money.format(draft.startingBalance))
-  ].join("");
+  return;
 }
 
 function renderItems() {
@@ -595,9 +549,7 @@ function renderSummary(summary) {
     summaryCardMarkup("Ending", money.format(summary.endingBalance), "")
   ].join("");
 
-  els.debtStatus.textContent = summary.debtBreaches ? "Debt blocked" : "No debt";
-  els.debtStatus.classList.toggle("good", !summary.debtBreaches);
-  els.debtStatus.title = summary.stopReason ? `${countLabel} transactions. ${summary.stopReason}.` : `${countLabel} transactions.`;
+  els.statementToolbar.title = summary.stopReason ? `${countLabel} transactions. ${summary.stopReason}.` : `${countLabel} transactions.`;
 }
 
 function renderStatement(rows) {

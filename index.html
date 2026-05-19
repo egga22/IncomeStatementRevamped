@@ -21,7 +21,7 @@
             <label class="visually-hidden" for="personalitySelect">Personality</label>
             <select id="personalitySelect" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
             <div class="personality-grid" id="personalityGrid" aria-label="Personality presets"></div>
-            <div class="current-card">Current: <strong id="currentPersonalityLabel">Basic</strong></div>
+            <div class="current-card">Current: <strong id="currentPersonalityLabel">Reccommended</strong></div>
           </section>
 
           <section class="panel settings-panel" aria-labelledby="settingsTitle">
@@ -57,12 +57,6 @@
               <div class="section-heading compact">
                 <div>
                   <h2 id="itemSettingsTitle">Item Settings</h2>
-                  <span class="status-pill" id="draftStatus">Clean</span>
-                </div>
-                <div class="small-actions">
-                  <button class="button secondary" id="resetPresetButton" type="button">Reset</button>
-                  <button class="button secondary" id="activeItemsButton" type="button">Spreadsheet Active</button>
-                  <button class="button secondary" id="clearItemsButton" type="button">Clear Items</button>
                 </div>
               </div>
 
@@ -75,13 +69,6 @@
                   <option value="available">Available</option>
                   <option value="inactive">Inactive source</option>
                 </select>
-              </div>
-
-              <div class="draft-metrics" id="draftMetrics"></div>
-
-              <div class="personality-actions">
-                <button class="button secondary" id="savePersonalityButton" type="button">Save As</button>
-                <button class="button secondary" id="updatePersonalityButton" type="button">Update</button>
               </div>
 
               <div class="table-wrap item-wrap">
@@ -107,7 +94,6 @@
           <div class="statement-toolbar" id="statementToolbar" hidden>
             <div>
               <h2 id="statementTitle">Generated Income Statement</h2>
-              <span class="status-pill good" id="debtStatus">No debt</span>
             </div>
             <div class="header-actions">
               <button class="button secondary" id="copyCsvButton" type="button">Copy CSV</button>
