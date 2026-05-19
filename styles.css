@@ -19,6 +19,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -83,6 +87,9 @@ select {
 .sidebar {
   display: grid;
   gap: 22px;
+  min-width: 0;
+  width: 420px;
+  max-width: 100%;
 }
 
 .panel,
@@ -94,12 +101,16 @@ select {
 
 .panel {
   padding: 22px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .statement-panel {
   min-height: 830px;
   padding: 30px;
   position: relative;
+  min-width: 0;
+  z-index: 0;
 }
 
 h2 {
@@ -275,10 +286,7 @@ select {
 }
 
 .section-heading.compact > div:first-child {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+  display: block;
 }
 
 .status-pill,
@@ -373,8 +381,10 @@ select {
 .item-wrap {
   margin-top: 14px;
   max-height: 390px;
+  max-width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
+  overflow: auto;
 }
 
 table {
@@ -564,6 +574,10 @@ td {
 
   .workspace-grid {
     grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    width: 100%;
   }
 
   .statement-panel {
