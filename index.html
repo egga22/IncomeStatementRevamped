@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teensville Income Statement Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero-card">
+        <h1><span aria-hidden="true">💰</span> Teensville Income Statement Generator</h1>
+        <p>Generate random income statements for teens</p>
+      </header>
+
+      <div class="workspace-grid">
+        <aside class="sidebar">
+          <section class="panel presets-panel" aria-labelledby="presetsTitle">
+            <h2 id="presetsTitle">🎭 Personality Presets</h2>
+            <label class="visually-hidden" for="personalitySelect">Personality</label>
+            <select id="personalitySelect" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
+            <div class="personality-grid" id="personalityGrid" aria-label="Personality presets"></div>
+            <div class="current-card">Current: <strong id="currentPersonalityLabel">Basic</strong></div>
+          </section>
+
+          <section class="panel settings-panel" aria-labelledby="settingsTitle">
+            <h2 id="settingsTitle">⚙️ Quick Settings</h2>
+
+            <label class="field-block" for="startingBalanceInput">
+              <span>Starting Balance:</span>
+              <input id="startingBalanceInput" type="number" min="0" step="5">
+            </label>
+
+            <label class="field-block" for="transactionCountInput">
+              <span>Transaction Count:</span>
+              <input id="transactionCountInput" type="number" min="1" max="200" step="1">
+            </label>
+
+            <label class="field-block" for="weeklyAllowanceInput">
+              <span>Weekly Allowance ($):</span>
+              <input id="weeklyAllowanceInput" type="number" min="0" step="5">
+            </label>
+
+            <div class="field-label">Gender:</div>
+            <div class="segmented" id="genderSegment" aria-label="Gender">
+              <button type="button" data-gender="Boy">Boy</button>
+              <button type="button" data-gender="Girl">Girl</button>
+            </div>
+
+            <button class="button primary generate-wide" id="generateButton" type="button">🎲 Generate Income Statement</button>
+          </section>
+
+          <section class="panel item-settings-panel" aria-labelledby="itemSettingsTitle">
+            <button class="collapse-button" id="itemSettingsToggle" type="button" aria-expanded="false">▶ Show Item Settings</button>
+            <div class="item-settings-content" id="itemSettingsContent" hidden>
+              <div class="section-heading compact">
+                <div>
+                  <h2 id="itemSettingsTitle">Item Settings</h2>
+                  <span class="status-pill" id="draftStatus">Clean</span>
+                </div>
+                <div class="small-actions">
+                  <button class="button secondary" id="resetPresetButton" type="button">Reset</button>
+                  <button class="button secondary" id="activeItemsButton" type="button">Spreadsheet Active</button>
+                  <button class="button secondary" id="clearItemsButton" type="button">Clear Items</button>
+                </div>
+              </div>
+
+              <div class="filter-row">
+                <input id="searchInput" type="search" placeholder="Search items">
+                <select id="typeFilter" aria-label="Type filter">
+                  <option value="all">All</option>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                  <option value="available">Available</option>
+                  <option value="inactive">Inactive source</option>
+                </select>
+              </div>
+
+              <div class="draft-metrics" id="draftMetrics"></div>
+
+              <div class="personality-actions">
+                <button class="button secondary" id="savePersonalityButton" type="button">Save As</button>
+                <button class="button secondary" id="updatePersonalityButton" type="button">Update</button>
+              </div>
+
+              <div class="table-wrap item-wrap">
+                <table class="items-table">
+                  <thead>
+                    <tr>
+                      <th>In</th>
+                      <th>Item</th>
+                      <th>Gender</th>
+                      <th>Amount</th>
+                      <th>Weight</th>
+                      <th>Source</th>
+                    </tr>
+                  </thead>
+                  <tbody id="itemsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </aside>
+
+        <section class="statement-panel" aria-labelledby="statementTitle">
+          <div class="statement-toolbar" id="statementToolbar" hidden>
+            <div>
+              <h2 id="statementTitle">Generated Income Statement</h2>
+              <span class="status-pill good" id="debtStatus">No debt</span>
+            </div>
+            <div class="header-actions">
+              <button class="button secondary" id="copyCsvButton" type="button">Copy CSV</button>
+              <button class="button secondary" id="downloadCsvButton" type="button">Download CSV</button>
+            </div>
+          </div>
+
+          <div class="welcome-state" id="welcomeState">
+            <h2>👋 Welcome!</h2>
+            <p>Select a personality preset, choose a gender, and click “Generate Income Statement” to get started.</p>
+            <p>You can customize items and weights in the settings panel.</p>
+          </div>
+
+          <div class="statement-content" id="statementContent" hidden>
+            <div class="summary-grid" id="summaryGrid"></div>
+            <div class="chart-wrap">
+              <canvas id="balanceChart" height="180" aria-label="Balance chart"></canvas>
+            </div>
+            <div class="table-wrap statement-wrap">
+              <table class="statement-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Transaction</th>
+                    <th>Type</th>
+                    <th>Update</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="statementBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
